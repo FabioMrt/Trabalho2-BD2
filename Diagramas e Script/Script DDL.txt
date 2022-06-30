@@ -1,0 +1,62 @@
+-- Criando Banco e usuário
+CREATE DATABASE reservaquarto;
+CREATE USER admin WITH PASSWORD 'aluno123';
+GRANT ALL PRIVILEGES ON DATABASE recursoshumanos TO admin;
+
+-- Criando Tabelas e chaves
+create table Reservas(
+    id INTEGER not null,
+    nome VARCHAR(30) not null,
+    cpf VARCHAR(14) unique not null,
+    dataReserva TIMESTAMP not null
+);
+
+create table Quarto(
+    codigo INTEGER not null,
+    hotel VARCHAR(200) not null,
+    primary key (codigo)
+);
+
+create table QuartoDetalhes(
+    codigo INTEGER not null,
+    valorDiaria VARCHAR(10) not null,
+    qtdCamas INTEGER not null,
+    numeroQuarto INTEGER not null
+    primary key (codigo)
+);
+
+
+-- Criando FK's
+
+-- Tabela Reservas
+alter table Reservas
+add column quarto_fk INTEGER not null;
+
+alter table Reservas 
+add constraint quarto_reservas_fk
+foreign key (quarto_fk) references Quarto (codigo);
+
+-- Tabela Quarto
+alter table Quarto
+add column detalhes_fk INTEGER not null;
+
+alter table Quarto
+add constraint quarto_detalhes_fk
+foreign key (detalhes_fk) references QuartoDetalhes (codigo);
+
+-- Criando Sequencies
+create sequence SEQ_RESERVAS start with 1;
+
+create sequence SEQ_QUARTO start with 1;
+
+create sequence SEQ_QUARTODETALHES start with 1;
+
+-- Consultas
+select * from Reservas;
+select * from Quarto;
+select * from QuartoDetalhes;
+
+-- Deletar tabelas junto com pk's e fk's
+drop table Reservas cascade;
+drop table Quarto cascade;
+drop table QuartoDetalhes cascade;
